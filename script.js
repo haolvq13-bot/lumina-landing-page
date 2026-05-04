@@ -157,19 +157,36 @@ if (leadForm) {
       return;
     }
 
+    const btn = leadForm.querySelector('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Đang xử lý...';
+
     const msg = encodeURIComponent(
       `Xin chào Lumina! Mình là ${name}, SĐT: ${phone}. Mình quan tâm gói: ${interest || 'chưa chọn'}. Cho mình xin thông tin ưu đãi nhé!`
     );
 
-    // Lưu data vào máy tính (Local Server)
-    fetch('http://localhost:3000/api/lead', {
+    // Gửi data về Email qua FormSubmit
+    fetch('https://formsubmit.co/ajax/haolvq13@gmail.com', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, source: `Form Tư Vấn (Gói: ${interest})` })
-    }).catch(err => console.log('Không tìm thấy Local Server, bỏ qua lưu trữ.'));
-
-    window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
-    leadForm.reset();
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ 
+        "Họ Tên": name, 
+        "Số Điện Thoại": phone, 
+        "Gói Quan Tâm": interest,
+        "Nguồn": "Form Tư Vấn (Cuối Trang)",
+        "_subject": "🔥 LEAD MỚI: Đăng ký tư vấn Lumina!"
+      })
+    })
+    .then(() => {
+      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
+      leadForm.reset();
+      btn.innerHTML = originalText;
+    })
+    .catch(err => {
+      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
+      leadForm.reset();
+      btn.innerHTML = originalText;
+    });
   });
 }
 
@@ -190,11 +207,16 @@ if (giftForm) {
     const originalText = btn.innerHTML;
     btn.innerHTML = 'Đang xử lý...';
     
-    // Gửi data tới máy tính (Local Server)
-    fetch('http://localhost:3000/api/lead', {
+    // Gửi data về Email qua FormSubmit
+    fetch('https://formsubmit.co/ajax/haolvq13@gmail.com', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, source: 'Form Quà Tặng' })
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ 
+        "Họ Tên": name, 
+        "Số Điện Thoại": phone, 
+        "Nguồn": "Form Nhận Quà (Zalo Group)",
+        "_subject": "🎁 LEAD MỚI: Khách nhận quà Zalo!"
+      })
     })
     .then(res => res.json())
     .then(() => {
@@ -204,10 +226,10 @@ if (giftForm) {
       btn.innerHTML = originalText;
     })
     .catch(error => {
-      console.error('Không kết nối được server lưu trữ nội bộ.');
       // Fallback êm ái: Không hiện lỗi, vẫn chuyển hướng bình thường
       alert('Đăng ký nhận quà thành công! Bấm OK để vào nhóm Zalo.');
       window.open('https://zalo.me/g/aguhpd664', '_blank');
+      giftForm.reset();
       btn.innerHTML = originalText;
     });
   });
