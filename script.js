@@ -179,11 +179,19 @@ if (leadForm) {
         "entry.556413437": name, 
         "entry.1883712141": phoneData
       })
-    }).catch(err => console.log('Gửi Form ẩn lỗi:', err));
-
-    window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
-    leadForm.reset();
-    btn.innerHTML = originalText;
+    })
+    .then(() => {
+      alert('Đăng ký tư vấn thành công! Bấm OK để mở khung chat Zalo.');
+      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
+      leadForm.reset();
+      btn.innerHTML = originalText;
+    })
+    .catch(err => {
+      alert('Đăng ký tư vấn thành công! Bấm OK để mở khung chat Zalo.');
+      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
+      leadForm.reset();
+      btn.innerHTML = originalText;
+    });
   });
 }
 
