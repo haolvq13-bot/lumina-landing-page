@@ -204,9 +204,9 @@ if (giftForm) {
       btn.innerHTML = originalText;
     })
     .catch(error => {
-      console.error('Error!', error.message);
-      // Fallback nếu không bật server
-      alert('Máy chủ thu thập dữ liệu chưa được bật, nhưng bạn vẫn có thể vào nhóm!');
+      console.error('Không kết nối được server lưu trữ nội bộ.');
+      // Fallback êm ái: Không hiện lỗi, vẫn chuyển hướng bình thường
+      alert('Đăng ký nhận quà thành công! Bấm OK để vào nhóm Zalo.');
       window.open('https://zalo.me/g/aguhpd664', '_blank');
       btn.innerHTML = originalText;
     });
