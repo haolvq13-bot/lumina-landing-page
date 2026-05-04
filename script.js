@@ -165,20 +165,21 @@ if (leadForm) {
       `Xin chào Lumina! Mình là ${name}, SĐT: ${phone}. Mình quan tâm gói: ${interest || 'chưa chọn'}. Cho mình xin thông tin ưu đãi nhé!`
     );
 
-    // Gửi data tới Google Sheets Webhook
-    // Bạn cần thay YOUR_WEBHOOK_URL bằng link Web App của Google Apps Script
-    const scriptURL = 'YOUR_WEBHOOK_URL_HERE';
+    // Gửi data tới Google Forms chạy ngầm
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScnAGtiNTmkpyYeijFDlbCcIe_i6ce_7jiSnejoEELQTuTWaw/formResponse';
     
-    fetch(scriptURL, {
+    // Nối thêm thông tin Gói quan tâm vào mục Số điện thoại để dễ nhìn trên Google Sheets
+    const phoneData = `${phone} (Gói: ${interest || 'Chưa chọn'})`;
+
+    fetch(formUrl, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        "Họ Tên": name, 
-        "Số Điện Thoại": phone, 
-        "Nguồn": "Form Tư Vấn (Cuối Trang)"
+        "entry.556413437": name, 
+        "entry.1883712141": phoneData
       })
-    })
-    .catch(err => console.log('Chưa cấu hình link Google Sheets'));
+    }).catch(err => console.log('Gửi Form ẩn lỗi:', err));
 
     window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
     leadForm.reset();
@@ -203,17 +204,18 @@ if (giftForm) {
     const originalText = btn.innerHTML;
     btn.innerHTML = 'Đang xử lý...';
     
-    // Gửi data tới Google Sheets Webhook
-    // Bạn cần thay YOUR_WEBHOOK_URL bằng link Web App của Google Apps Script
-    const scriptURL = 'YOUR_WEBHOOK_URL_HERE';
+    // Gửi data tới Google Forms chạy ngầm
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScnAGtiNTmkpyYeijFDlbCcIe_i6ce_7jiSnejoEELQTuTWaw/formResponse';
 
-    fetch(scriptURL, {
+    const phoneData = `${phone} (Nhận Quà Zalo)`;
+
+    fetch(formUrl, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        "Họ Tên": name, 
-        "Số Điện Thoại": phone, 
-        "Nguồn": "Form Nhận Quà (Zalo Group)"
+        "entry.556413437": name, 
+        "entry.1883712141": phoneData
       })
     })
     .then(() => {
@@ -223,7 +225,6 @@ if (giftForm) {
       btn.innerHTML = originalText;
     })
     .catch(error => {
-      // Fallback nếu chưa có link
       alert('Đăng ký nhận quà thành công! Bấm OK để vào nhóm Zalo.');
       window.open('https://zalo.me/g/aguhpd664', '_blank');
       giftForm.reset();
