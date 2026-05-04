@@ -165,28 +165,24 @@ if (leadForm) {
       `Xin chào Lumina! Mình là ${name}, SĐT: ${phone}. Mình quan tâm gói: ${interest || 'chưa chọn'}. Cho mình xin thông tin ưu đãi nhé!`
     );
 
-    // Gửi data về Email qua FormSubmit
-    fetch('https://formsubmit.co/ajax/haolvq13@gmail.com', {
+    // Gửi data tới Google Sheets Webhook
+    // Bạn cần thay YOUR_WEBHOOK_URL bằng link Web App của Google Apps Script
+    const scriptURL = 'YOUR_WEBHOOK_URL_HERE';
+    
+    fetch(scriptURL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ 
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
         "Họ Tên": name, 
         "Số Điện Thoại": phone, 
-        "Gói Quan Tâm": interest,
-        "Nguồn": "Form Tư Vấn (Cuối Trang)",
-        "_subject": "🔥 LEAD MỚI: Đăng ký tư vấn Lumina!"
+        "Nguồn": "Form Tư Vấn (Cuối Trang)"
       })
     })
-    .then(() => {
-      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
-      leadForm.reset();
-      btn.innerHTML = originalText;
-    })
-    .catch(err => {
-      window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
-      leadForm.reset();
-      btn.innerHTML = originalText;
-    });
+    .catch(err => console.log('Chưa cấu hình link Google Sheets'));
+
+    window.open(`https://zalo.me/0937872631?text=${msg}`, '_blank');
+    leadForm.reset();
+    btn.innerHTML = originalText;
   });
 }
 
@@ -207,18 +203,19 @@ if (giftForm) {
     const originalText = btn.innerHTML;
     btn.innerHTML = 'Đang xử lý...';
     
-    // Gửi data về Email qua FormSubmit
-    fetch('https://formsubmit.co/ajax/haolvq13@gmail.com', {
+    // Gửi data tới Google Sheets Webhook
+    // Bạn cần thay YOUR_WEBHOOK_URL bằng link Web App của Google Apps Script
+    const scriptURL = 'YOUR_WEBHOOK_URL_HERE';
+
+    fetch(scriptURL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ 
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
         "Họ Tên": name, 
         "Số Điện Thoại": phone, 
-        "Nguồn": "Form Nhận Quà (Zalo Group)",
-        "_subject": "🎁 LEAD MỚI: Khách nhận quà Zalo!"
+        "Nguồn": "Form Nhận Quà (Zalo Group)"
       })
     })
-    .then(res => res.json())
     .then(() => {
       alert('Đăng ký nhận quà thành công! Bấm OK để vào nhóm Zalo.');
       window.open('https://zalo.me/g/aguhpd664', '_blank');
@@ -226,7 +223,7 @@ if (giftForm) {
       btn.innerHTML = originalText;
     })
     .catch(error => {
-      // Fallback êm ái: Không hiện lỗi, vẫn chuyển hướng bình thường
+      // Fallback nếu chưa có link
       alert('Đăng ký nhận quà thành công! Bấm OK để vào nhóm Zalo.');
       window.open('https://zalo.me/g/aguhpd664', '_blank');
       giftForm.reset();
